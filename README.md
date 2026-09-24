@@ -59,9 +59,9 @@ Deactivate the virtual environment when finished:
 ```bash
 deactivate
 ```
- 
+
 ## Commands
- 
+
 ### Audio
 - `$play <sound>`: Plays a sound from the `sounds/` directory in your voice channel.
 - `$stop`: Stops the current sound with a fade-out effect.
