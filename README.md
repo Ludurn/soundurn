@@ -85,9 +85,9 @@ deactivate
 ## Sounds
 
 If the `sounds/` directory does not exist, create it in the project root.
- 
+
 Place your `.mp3` files inside the `sounds/` directory.
- 
+
 Example:
 
 ```text
