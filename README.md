@@ -10,7 +10,7 @@ A Discord bot written in Python that plays locally stored sounds.
 ---
 
 ## Requirements
-- Python 3.x
+- Python 3.9+
 - FFmpeg
 
 ## Configuration
