@@ -1,11 +1,14 @@
-import json
 import discord
 import os
 import asyncio
 
-fconfig = open("config.json", "r")
-config = json.load(fconfig)
-fconfig.close()
+from dotenv import load_dotenv
+load_dotenv()
+
+TOKEN = os.getenv("DISCORD_TOKEN")
+
+if not TOKEN:
+    raise ValueError
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -253,4 +256,4 @@ async def on_message(message):
         )
 
 
-client.run(config["token"])
+client.run(TOKEN)
