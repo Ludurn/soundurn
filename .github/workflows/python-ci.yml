@@ -33,8 +33,13 @@ jobs:
 
       - name: Lint with Ruff
         run: |
+          ruff check .
           ruff format --check .
 
       - name: Compile Python
         run: |
           python -m compileall .
+
+      - name: Build Docker image
+        run: |
+          docker build -t soundurn .
