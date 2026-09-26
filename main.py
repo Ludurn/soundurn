@@ -11,6 +11,8 @@ TOKEN = os.getenv("DISCORD_TOKEN")
 if not TOKEN:
     raise ValueError
 
+os.makedirs("sounds", exist_ok=True)
+
 intents = discord.Intents.default()
 intents.message_content = True
 
