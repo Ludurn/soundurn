@@ -24,10 +24,7 @@ def play_sound(vClient, loop_sound, source):
     path = os.path.join("sounds", f"{source}.mp3")
 
     if loop_sound:
-        audio = discord.FFmpegPCMAudio(
-            path,
-            before_options="-stream_loop -1"
-        )
+        audio = discord.FFmpegPCMAudio(path, before_options="-stream_loop -1")
     else:
         audio = discord.FFmpegPCMAudio(path)
 
