@@ -10,23 +10,28 @@ A Discord bot written in Python that plays locally stored sounds.
 ---
 
 ## Requirements
+
+### Local Execution
 - Python 3.9+
 - FFmpeg
 
+### Containerized Execution
+- Docker
+
 ## Configuration
 
-Create a file named `config.json`.
+Create an `.env` file.
 
 Place your Discord bot token in it. The bot reads this file on startup and will fail to log in if the file is missing or the token is invalid.
 
-```json
-{
-  "token": "YOUR_DISCORD_BOT_TOKEN"
-}
+```env
+  DISCORD_TOKEN=your_token_here
 ```
-> Never share your bot token or commit config.json to source control.
+> Never share your bot token or commit .env to source control.
 
 ## Setup
+
+### Local Execution
 
 It is recommended to use a virtual environment.
 
@@ -45,7 +50,7 @@ source .venv/bin/activate
 Install dependencies:
 
 ```bash
-pip install "discord.py[voice]"
+pip install -r requirements.txt
 ```
 
 Run the bot:
@@ -58,6 +63,18 @@ Deactivate the virtual environment when finished:
 
 ```bash
 deactivate
+```
+
+### Containerized Execution
+
+Build the image:
+```bash
+docker build -t soundurn .
+```
+
+Run the container:
+```bash
+docker run --env-file .env soundurn
 ```
 
 ## Commands
@@ -83,8 +100,6 @@ deactivate
 - `$help`: Displays the list of available commands.
  
 ## Sounds
-
-If the `sounds/` directory does not exist, create it in the project root.
 
 Place your `.mp3` files inside the `sounds/` directory.
 
