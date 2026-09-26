@@ -1,7 +1,7 @@
-import discord
-import os
 import asyncio
+import os
 
+import discord
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -229,10 +229,9 @@ async def on_message(message):
         else:
             vClient = await vChannel.connect()
 
-    if message.content.startswith("$dcon"):
-        if vClient and vClient.is_connected():
-            vClient.stop()
-            await vClient.disconnect()
+    if message.content.startswith("$dcon") and vClient and vClient.is_connected():
+        vClient.stop()
+        await vClient.disconnect()
 
     if message.content.startswith("$help"):
         await message.channel.send(
