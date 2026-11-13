@@ -74,7 +74,7 @@ docker build -t soundurn .
 
 Run the container:
 ```bash
-docker run --env-file .env soundurn
+docker run --env-file .env -v ./sounds:/app/sounds:ro soundurn
 ```
 
 ## Commands
