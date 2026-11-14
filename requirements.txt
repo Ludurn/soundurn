@@ -1,4 +1,4 @@
-discord.py[voice]
+disnake[voice]
 PyNaCl
 python-dotenv
 pytest

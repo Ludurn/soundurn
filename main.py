@@ -1,7 +1,8 @@
 import asyncio
 import os
 
-import discord
+import disnake as discord
+from disnake.ext import commands
 from dotenv import load_dotenv
 
 load_dotenv()
