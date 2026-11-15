@@ -98,7 +98,7 @@ async def play(inter, sound: str):
 
 @bot.event
 async def on_message(message):
-    global vClient, loop_sound, source
+    global vClient, loop_sound
 
     if message.content.startswith("$stop"):
         if not vClient:
