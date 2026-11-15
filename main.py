@@ -145,6 +145,30 @@ async def pause(inter):
     await send_msg(inter, "*The sound has been paused (-v-)*")
 
 
+@bot.slash_command(name="resume", description="Resumes the currently paused sound")
+async def resume(inter):
+    bot_voice = inter.guild.voice_client
+
+    if not bot_voice:
+        await send_ephemeral(
+            inter, "*The bot must be in a voice channel to resume a sound ¯\\\\(ツ)/¯*"
+        )
+        return
+
+    if bot_voice.is_playing():
+        await send_ephemeral(inter, "*The bot is already playing right now 0-0*")
+        return
+
+    if not bot_voice.is_paused():
+        await send_ephemeral(inter, "*The bot has nothing to play right now 0-0*")
+        return
+
+    await inter.response.defer()
+    bot_voice.source.volume = 1.0
+    bot_voice.resume()
+    await send_msg(inter, "*The sound has been resumed (-v-)*")
+
+
 @bot.event
 async def on_message(message):
     global vClient, loop_sound
