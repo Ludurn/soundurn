@@ -49,11 +49,19 @@ async def fade_out(vClient):
 
 
 async def send_msg(inter, message):
-    await inter.response.send_message(f"{message}")
+    if inter.response.is_done():
+        await inter.edit_original_response(content=f"{message}")
+    else:
+        await inter.response.send_message(f"{message}")
 
 
 async def send_ephemeral(inter, message):
-    await inter.response.send_message(f"{message}", ephemeral=True, delete_after=5.0)
+    if inter.response.is_done():
+        await inter.followup.send(f"{message}", ephemeral=True, delete_after=5.0)
+    else:
+        await inter.response.send_message(
+            f"{message}", ephemeral=True, delete_after=5.0
+        )
 
 
 @bot.event
