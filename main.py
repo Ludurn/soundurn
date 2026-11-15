@@ -16,7 +16,7 @@ os.makedirs("sounds", exist_ok=True)
 
 command_sync_flags = commands.CommandSyncFlags.default()
 
-bot = commands.Bot(command_prefix="$", command_sync_flags=command_sync_flags)
+bot = commands.InteractionBot(command_sync_flags=command_sync_flags)
 
 bot_voice = None
 loop_sound = False
