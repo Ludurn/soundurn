@@ -14,10 +14,9 @@ if not TOKEN:
 
 os.makedirs("sounds", exist_ok=True)
 
-intents = discord.Intents.default()
-intents.message_content = True
+command_sync_flags = commands.CommandSyncFlags.default()
 
-client = discord.Client(intents=intents)
+bot = commands.Bot(command_prefix="$", command_sync_flags=command_sync_flags)
 
 vClient = None
 loop_sound = False
@@ -46,12 +45,12 @@ async def fade_out(vClient):
     vClient.stop()
 
 
-@client.event
+@bot.event
 async def on_ready():
-    print(f"Logged on as {client.user}")
+    print(f"Logged on as {bot.user}")
 
 
-@client.event
+@bot.event
 async def on_message(message):
     global vClient, loop_sound, source
 
@@ -259,4 +258,4 @@ async def on_message(message):
         )
 
 
-client.run(TOKEN)
+bot.run(TOKEN)
