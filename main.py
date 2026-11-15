@@ -18,23 +18,26 @@ command_sync_flags = commands.CommandSyncFlags.default()
 
 bot = commands.Bot(command_prefix="$", command_sync_flags=command_sync_flags)
 
-vClient = None
+bot_voice = None
 loop_sound = False
-source = None
+sound = None
 
 
-def play_sound(vClient, loop_sound, source):
-    if not vClient or not vClient.is_connected():
-        return
+def play_sound(bot_voice, loop_sound, sound):
+    if bot_voice is None or not bot_voice.is_connected():
+        return "*Bot is not connected to a voice channel 'v'*"
 
-    path = os.path.join("sounds", f"{source}.mp3")
+    path = os.path.join("sounds", f"{sound}.mp3")
 
-    if loop_sound:
-        audio = discord.FFmpegPCMAudio(path, before_options="-stream_loop -1")
-    else:
-        audio = discord.FFmpegPCMAudio(path)
+    if not os.path.isfile(path):
+        return f"*'{sound}' sound source not found -_-*"
 
-    vClient.play(discord.PCMVolumeTransformer(audio, volume=1.0))
+    audio = discord.FFmpegPCMAudio(
+        path, before_options="-stream_loop -1" if loop_sound else None
+    )
+
+    bot_voice.play(discord.PCMVolumeTransformer(audio, volume=1.0))
+    return f"*Playing {sound} for ya ~.~*"
 
 
 async def fade_out(vClient):
