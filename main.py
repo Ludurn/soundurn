@@ -115,7 +115,7 @@ async def stop(inter):
         return
 
     await inter.response.defer()
-    await fade_out(bot_voice)
+    await fade_out(bot_voice, False)
     await send_msg(inter, "*The sound has been stopped (-v-)*")
 
 
