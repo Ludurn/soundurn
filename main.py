@@ -61,35 +61,36 @@ async def on_ready():
     print(f"Logged on as {bot.user}")
 
 
+@bot.slash_command(name="play", description="Plays a sound")
+async def play(inter, sound: str):
+    global bot_voice
+
+    user_voice = inter.user.voice
+
+    if user_voice is None or not user_voice.channel:
+        await send_ephemeral(
+            inter, "*You must be in a voice channel to play the sound 'v'*"
+        )
+        return
+
+    if not sound.strip():
+        await send_ephemeral(inter, "*You must specify a available source -_-*")
+
+    bot_voice = inter.guild.voice_client
+
+    if bot_voice:
+        if bot_voice.channel.id != user_voice.channel.id:
+            await bot_voice.move_to(user_voice.channel)
+    else:
+        bot_voice = await user_voice.channel.connect()
+
+    player_output = play_sound(bot_voice, loop_sound, sound)
+    await send_msg(inter, player_output)
+
+
 @bot.event
 async def on_message(message):
     global vClient, loop_sound, source
-
-    if message.content.startswith("$play"):
-        if not message.author.voice:  # the author message is not in voice channel
-            await message.channel.send(
-                "*You must be in a voice channel to play the sound 'v'*"
-            )
-            return
-        source = message.content.split(" ", 1)
-        if len(source) < 2:
-            await message.channel.send("*You must specify a source -_-*")
-            return
-        source = "".join(source[1])
-        vChannel = message.author.voice.channel
-        if message.guild.voice_client:  # the bot is connected in a voice channel
-            vClient = message.guild.voice_client
-            if vClient.channel != vChannel:
-                await vClient.move_to(vChannel)
-        else:  # the bot is nowhere connected
-            vClient = await vChannel.connect()
-        if not vClient.is_playing():
-            play_sound(vClient, loop_sound, source)
-            await message.channel.send(f"*Playing {source} for ya ~.~*")
-        else:
-            await fade_out(vClient)
-            play_sound(vClient, loop_sound, source)
-            await message.channel.send(f"*Playing {source} for ya ~.~*")
 
     if message.content.startswith("$stop"):
         if not vClient:
