@@ -48,6 +48,14 @@ async def fade_out(vClient):
     vClient.stop()
 
 
+async def send_msg(inter, message):
+    await inter.response.send_message(f"{message}")
+
+
+async def send_ephemeral(inter, message):
+    await inter.response.send_message(f"{message}", ephemeral=True, delete_after=5.0)
+
+
 @bot.event
 async def on_ready():
     print(f"Logged on as {bot.user}")
