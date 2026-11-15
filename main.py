@@ -40,12 +40,18 @@ def play_sound(bot_voice, loop_sound, sound):
     return f"*Playing {sound} for ya ~.~*"
 
 
-async def fade_out(vClient):
-    src = vClient.source
-    while src.volume > 0:
-        src.volume -= 0.1
+async def fade_out(bot_voice):
+    source = bot_voice.source
+
+    if source is None or not hasattr(source, "volume"):
+        bot_voice.stop()
+        return
+
+    while bot_voice.is_playing() and source.volume > 0:
+        source.volume = max(0.0, source.volume - 0.1)
         await asyncio.sleep(0.3)
-    vClient.stop()
+
+    bot_voice.stop()
 
 
 async def send_msg(inter, message):
