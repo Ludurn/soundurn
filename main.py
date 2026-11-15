@@ -102,23 +102,26 @@ async def play(inter, sound: str):
     await send_msg(inter, player_output)
 
 
+@bot.slash_command(name="stop", description="Stops the currently playing sound")
+async def stop(inter):
+    if not bot_voice:
+        await send_ephemeral(
+            inter, "*The bot must be in a voice channel to stop a sound ¯\\\\(ツ)/¯*"
+        )
+        return
+
+    if not bot_voice.is_playing():
+        await send_ephemeral(inter, "*The bot is playing nothing right now 0-0*")
+        return
+
+    await inter.response.defer()
+    await fade_out(bot_voice)
+    await send_msg(inter, "*The sound has been stopped (-v-)*")
+
+
 @bot.event
 async def on_message(message):
     global vClient, loop_sound
-
-    if message.content.startswith("$stop"):
-        if not vClient:
-            return
-        if not vClient.is_connected():
-            await message.channel.send("*I'm not connected to a voice channel ;-;*")
-            return
-        if not vClient.is_playing():
-            await message.channel.send("*No sound is playing right now 0-0*")
-            return
-        else:
-            # vClient.stop()
-            await fade_out(vClient)
-            await message.channel.send("*The sound has been stopped (-v-)*")
 
     if message.content.startswith("$loop"):
         loop_sound = not loop_sound
