@@ -96,6 +96,10 @@ async def play(inter, sound: str):
     else:
         bot_voice = await user_voice.channel.connect()
 
+    await inter.response.defer()
+    if bot_voice.is_playing():
+        await fade_out(bot_voice, False)
+
     player_output = play_sound(bot_voice, loop_sound, sound)
     await send_msg(inter, player_output)
 
