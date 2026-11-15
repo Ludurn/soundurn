@@ -77,8 +77,6 @@ async def on_ready():
 
 @bot.slash_command(name="play", description="Plays a sound")
 async def play(inter, sound: str):
-    global bot_voice
-
     user_voice = inter.user.voice
 
     if user_voice is None or not user_voice.channel:
@@ -104,6 +102,8 @@ async def play(inter, sound: str):
 
 @bot.slash_command(name="stop", description="Stops the currently playing sound")
 async def stop(inter):
+    bot_voice = inter.guild.voice_client
+
     if not bot_voice:
         await send_ephemeral(
             inter, "*The bot must be in a voice channel to stop a sound ¯\\\\(ツ)/¯*"
