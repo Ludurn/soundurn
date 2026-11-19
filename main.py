@@ -231,15 +231,20 @@ async def clear(inter):
     await send_ephemeral(inter, f"*Cleared {len(deleted)} messages (-v-)*")
 
 
+@bot.slash_command(name="soundls", description="Lists the available sounds")
+async def soundls(inter):
+    sound_list = ["*The available sounds are:*"]
+
+    for filename in os.listdir("sounds"):
+        filepath = os.path.join("sounds", filename)
+        if os.path.isfile(filepath) and filename.lower().endswith(".mp3"):
+            sound_list.append(f"\n**{filename.removesuffix('.mp3')}**")
+
+    await send_msg(inter, f"{''.join(sound_list)}")
+
+
 @bot.event
 async def on_message(message):
-
-    if message.content.startswith("$soundls"):
-        await message.channel.send("*The available sounds are:*")
-        for filename in os.listdir("sounds"):
-            filepath = os.path.join("sounds", filename)
-            if os.path.isfile(filepath) and filename.lower().endswith(".mp3"):
-                await message.channel.send(f"\n**{filename.removesuffix('.mp3')}**")
 
     if message.content.startswith("$mute"):
         if not message.mentions:
