@@ -30,7 +30,7 @@ def get_guild_settings(guild_id):
     return guild_settings[guild_id]
 
 
-def play_sound(bot_voice, loop_sound, sound):
+def play_sound(bot_voice, settings, sound):
     if bot_voice is None or not bot_voice.is_connected():
         return "*Bot is not connected to a voice channel 'v'*"
 
@@ -39,11 +39,32 @@ def play_sound(bot_voice, loop_sound, sound):
     if not os.path.isfile(path):
         return f"*'{sound}' sound source not found -_-*"
 
-    audio = discord.FFmpegPCMAudio(
-        path, before_options="-stream_loop -1" if loop_sound else None
-    )
+    settings["current_sound"] = sound
+    event_loop = asyncio.get_running_loop()
 
-    bot_voice.play(discord.PCMVolumeTransformer(audio, volume=1.0))
+    def after_playing(error):
+        if error:
+            print(f"Player error: {error}")
+            return
+
+        if (
+            settings["loop"]
+            and settings["current_sound"] == sound
+            and bot_voice.is_connected()
+        ):
+            event_loop.call_soon_threadsafe(
+                play_sound,
+                bot_voice,
+                settings,
+                sound,
+            )
+
+    audio = discord.FFmpegPCMAudio(path)
+
+    bot_voice.play(
+        discord.PCMVolumeTransformer(audio, volume=1.0),
+        after=after_playing,
+    )
     return f"*Playing {sound} for ya ~.~*"
 
 
