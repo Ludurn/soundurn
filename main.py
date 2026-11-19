@@ -202,16 +202,26 @@ async def resume(inter):
     await send_msg(inter, "*The sound has been resumed (-v-)*")
 
 
+@bot.slash_command(name="loop", description="Loop the current sound")
+async def loop(inter):
+    bot_voice = inter.guild.voice_client
+
+    if not bot_voice:
+        await send_ephemeral(
+            inter, "*The bot must be in a voice channel to loop a sound ¯\\\\(ツ)/¯*"
+        )
+        return
+
+    settings = get_guild_settings(inter.guild.id)
+    settings["loop"] = not settings["loop"]
+
+    status = "enabled" if settings["loop"] else "disabled"
+    await send_msg(inter, f"*Sound looping has been {status} (-v-)*")
+
+
 @bot.event
 async def on_message(message):
     global vClient, loop_sound
-
-    if message.content.startswith("$loop"):
-        loop_sound = not loop_sound
-        if loop_sound:
-            await message.channel.send("*Loop is activated :D*")
-        else:
-            await message.channel.send("*Loop is desactivated :c*")
 
     if message.content.startswith("$clear"):
         if not message.author.guild_permissions.manage_messages:
