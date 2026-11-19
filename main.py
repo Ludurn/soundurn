@@ -18,9 +18,16 @@ command_sync_flags = commands.CommandSyncFlags.default()
 
 bot = commands.InteractionBot(command_sync_flags=command_sync_flags)
 
-bot_voice = None
-loop_sound = False
-sound = None
+guild_settings = {}
+
+
+def get_guild_settings(guild_id):
+    if guild_id not in guild_settings:
+        guild_settings[guild_id] = {
+            "loop": False,
+            "current_sound": None,
+        }
+    return guild_settings[guild_id]
 
 
 def play_sound(bot_voice, loop_sound, sound):
