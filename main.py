@@ -219,19 +219,20 @@ async def loop(inter):
     await send_msg(inter, f"*Sound looping has been {status} (-v-)*")
 
 
+@bot.slash_command(name="clear", description="Clears the 100 most recent messages")
+async def clear(inter):
+    if not inter.permissions.manage_messages:
+        await send_ephemeral(
+            inter, "*You don't have the permission to clear messages ¯\\\\(ツ)/¯*"
+        )
+        return
+
+    deleted = await inter.channel.purge(limit=100)
+    await send_ephemeral(inter, f"*Cleared {len(deleted)} messages (-v-)*")
+
+
 @bot.event
 async def on_message(message):
-
-    if message.content.startswith("$clear"):
-        if not message.author.guild_permissions.manage_messages:
-            await message.channel.send(
-                "*You don't have the permission to clear messages. '-'*"
-            )
-            return
-        deleted = await message.channel.purge(limit=100)
-        await message.channel.send(
-            f"*Cleared {len(deleted)} messages :P*", delete_after=5
-        )
 
     if message.content.startswith("$soundls"):
         await message.channel.send("*The available sounds are:*")
