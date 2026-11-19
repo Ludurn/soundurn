@@ -125,10 +125,14 @@ async def play(inter, sound: str):
         bot_voice = await user_voice.channel.connect()
 
     await inter.response.defer()
+
+    settings = get_guild_settings(inter.guild.id)
+    settings["current_sound"] = sound
+
     if bot_voice.is_playing():
         await fade_out(bot_voice, False)
 
-    player_output = play_sound(bot_voice, loop_sound, sound)
+    player_output = play_sound(bot_voice, settings, sound)
     await send_msg(inter, player_output)
 
 
