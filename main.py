@@ -221,7 +221,6 @@ async def loop(inter):
 
 @bot.event
 async def on_message(message):
-    global vClient, loop_sound
 
     if message.content.startswith("$clear"):
         if not message.author.guild_permissions.manage_messages:
