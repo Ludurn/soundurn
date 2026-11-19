@@ -151,6 +151,7 @@ async def stop(inter):
         return
 
     await inter.response.defer()
+    get_guild_settings(inter.guild.id)["current_sound"] = None
     await fade_out(bot_voice, False)
     await send_msg(inter, "*The sound has been stopped (-v-)*")
 
