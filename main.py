@@ -269,6 +269,18 @@ async def soundls(inter, pack: str):
     await send_msg(inter, f"{''.join(sound_list)}")
 
 
+@bot.slash_command(name="packls", description="Lists the available sound packs")
+async def packls(inter):
+    pack_list = ["*The available sound packs are:*"]
+
+    for dirname in os.listdir("sounds"):
+        dirpath = os.path.join("sounds", dirname)
+        if os.path.isdir(dirpath):
+            pack_list.append(f"\n**{dirname}**")
+
+    await send_msg(inter, f"{''.join(pack_list)}")
+
+
 @bot.event
 async def on_message(message):
 
