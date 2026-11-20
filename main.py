@@ -251,12 +251,18 @@ async def clear(inter):
     await send_ephemeral(inter, f"*Cleared {len(deleted)} messages (-v-)*")
 
 
-@bot.slash_command(name="soundls", description="Lists the available sounds")
-async def soundls(inter):
-    sound_list = ["*The available sounds are:*"]
+@bot.slash_command(name="soundls", description="Lists the available sounds in a pack")
+async def soundls(inter, pack: str):
+    pack = pack.lower()
 
-    for filename in os.listdir("sounds"):
-        filepath = os.path.join("sounds", filename)
+    if not os.path.isdir(f"sounds/{pack}"):
+        await send_ephemeral(inter, "*You must specify an available pack -_-*")
+        return
+
+    sound_list = [f"*The available sounds in **{pack}** are:*"]
+
+    for filename in os.listdir(f"sounds/{pack}"):
+        filepath = os.path.join("sounds", pack, filename)
         if os.path.isfile(filepath) and filename.lower().endswith(".mp3"):
             sound_list.append(f"\n**{filename.removesuffix('.mp3')}**")
 
