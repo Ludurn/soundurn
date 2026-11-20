@@ -161,21 +161,20 @@ async def handle_action(inter, selected_users, action):
             result["except"].append(member.mention)
             continue
 
-        match action:
-            case "silence":
-                already_applied = member_vc.mute and member_vc.deaf
-                edit_options = {"mute": True, "deafen": True}
+        if action == "silence":
+            already_applied = member_vc.mute and member_vc.deaf
+            edit_options = {"mute": True, "deafen": True}
 
-            case "mute":
-                already_applied = member_vc.mute
-                edit_options = {"mute": True}
+        elif action == "mute":
+            already_applied = member_vc.mute
+            edit_options = {"mute": True}
 
-            case "deafen":
-                already_applied = member_vc.deaf
-                edit_options = {"deafen": True}
+        elif action == "deafen":
+            already_applied = member_vc.deaf
+            edit_options = {"deafen": True}
 
-            case _:
-                raise ValueError(f"Unsupported action: {action}")
+        else:
+            raise ValueError(f"Unsupported action: {action}")
 
         if already_applied:
             result["already"].append(member.mention)
