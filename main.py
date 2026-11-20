@@ -34,10 +34,30 @@ def play_sound(bot_voice, settings, sound):
     if bot_voice is None or not bot_voice.is_connected():
         return "*Bot is not connected to a voice channel 'v'*"
 
-    path = os.path.join("sounds", f"{sound}.mp3")
+    path = ""
 
-    if not os.path.isfile(path):
-        return f"*'{sound}' sound source not found -_-*"
+    for pack in os.listdir("sounds"):
+        packpath = os.path.join("sounds", pack)
+
+        if not os.path.isdir(packpath):
+            continue
+
+        for filename in os.listdir(packpath):
+            filepath = os.path.join(packpath, filename)
+
+            if (
+                os.path.isfile(filepath)
+                and filename.endswith(".mp3")
+                and (filename.removesuffix(".mp3") == sound)
+            ):
+                path = filepath
+                break
+
+        if path:
+            break
+
+    if not path:
+        return f"***{sound}** sound source not found -_-*"
 
     settings["current_sound"] = sound
     event_loop = asyncio.get_running_loop()
