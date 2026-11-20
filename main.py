@@ -118,6 +118,20 @@ async def send_ephemeral(inter, message):
         )
 
 
+async def send_view(inter, message, view=None, ephemeral=False, delete_after=None):
+    if delete_after is not None and delete_after <= 0.0:
+        delete_after = None
+
+    if inter.response.is_done():
+        await inter.edit_original_response(
+            f"{message}", delete_after=delete_after, view=view
+        )
+    else:
+        await inter.response.send_message(
+            f"{message}", ephemeral=ephemeral, delete_after=delete_after, view=view
+        )
+
+
 @bot.event
 async def on_ready():
     print(f"Logged on as {bot.user}")
