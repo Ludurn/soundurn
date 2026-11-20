@@ -21,6 +21,20 @@ bot = commands.InteractionBot(command_sync_flags=command_sync_flags)
 guild_settings = {}
 
 
+class UserPicker(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=60.0)
+        self.selected_users = []
+
+    @discord.ui.user_select(placeholder="Select users", min_values=1, max_values=25)
+    async def select_users(self, select, inter):
+        self.selected_users.extend(select.values)
+
+        await inter.response.defer()
+
+        self.stop()
+
+
 def get_guild_settings(guild_id):
     if guild_id not in guild_settings:
         guild_settings[guild_id] = {
