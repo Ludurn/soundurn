@@ -350,24 +350,46 @@ async def packls(inter):
     await send_msg(inter, f"{''.join(pack_list)}")
 
 
+@bot.slash_command(name="mute", description="Mutes the selected users")
+async def mute(inter):
+    if not inter.permissions.mute_members:
+        await send_ephemeral(
+            inter, "*You don't have the permission to mute members ¯\\\\(ツ)/¯*"
+        )
+        return
+
+    view = UserPicker()
+    await send_view(
+        inter, "Select the users to be muted:", view, ephemeral=True, delete_after=30.0
+    )
+    await view.wait()
+
+    if len(view.selected_users) <= 0:
+        await send_view(
+            inter, "*Nobody was muted, you must specify a user -_-*", delete_after=5.0
+        )
+        return
+
+    result = await handle_action(inter, view.selected_users, "mute")
+
+    message = ""
+
+    if result["applied"]:
+        message += f"*Users that have been muted:*\n{'\n'.join(result['applied'])}"
+
+    if result["except"]:
+        message += f"\n\n*Users that need to be in a voice channel to be muted:*\n{'\n'.join(result['except'])}"
+
+    if result["already"]:
+        message += (
+            f"\n\n*Users that were already muted:*\n{'\n'.join(result['already'])}"
+        )
+
+    await send_view(inter, message, delete_after=15.0)
+
+
 @bot.event
 async def on_message(message):
-
-    if message.content.startswith("$mute"):
-        if not message.mentions:
-            await message.channel.send(
-                "*Nobody was muted, you need to mention someone ._.*"
-            )
-        for member in message.mentions:
-            if member.voice and member.voice.channel:
-                await member.edit(mute=True)
-                await message.channel.send(
-                    f"_**{member.display_name}** has been muted :x_"
-                )
-            else:
-                await message.channel.send(
-                    f"_{member.display_name} is not in a voice channel T-T_"
-                )
 
     if message.content.startswith("$unmute"):
         if not message.mentions:
