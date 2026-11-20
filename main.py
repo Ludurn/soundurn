@@ -146,6 +146,47 @@ async def send_view(inter, message, view=None, ephemeral=False, delete_after=Non
         )
 
 
+async def handle_action(inter, selected_users, action):
+    result = {
+        "applied": [],
+        "except": [],
+        "already": [],
+    }
+
+    for user in selected_users:
+        member = await inter.guild.fetch_member(user.id)
+        member_vc = member.voice
+
+        if not member_vc:
+            result["except"].append(member.mention)
+            continue
+
+        match action:
+            case "silence":
+                already_applied = member_vc.mute and member_vc.deaf
+                edit_options = {"mute": True, "deafen": True}
+
+            case "mute":
+                already_applied = member_vc.mute
+                edit_options = {"mute": True}
+
+            case "deafen":
+                already_applied = member_vc.deaf
+                edit_options = {"deafen": True}
+
+            case _:
+                raise ValueError(f"Unsupported action: {action}")
+
+        if already_applied:
+            result["already"].append(member.mention)
+            continue
+
+        await member.edit(**edit_options)
+        result["applied"].append(member.mention)
+
+    return result
+
+
 @bot.event
 async def on_ready():
     print(f"Logged on as {bot.user}")
