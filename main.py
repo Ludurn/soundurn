@@ -374,14 +374,17 @@ async def mute(inter):
     message = ""
 
     if result["applied"]:
-        message += f"*Users that have been muted:*\n{'\n'.join(result['applied'])}"
+        message += "*Users that have been muted:*\n" + "\n".join(result["applied"])
 
     if result["except"]:
-        message += f"\n\n*Users that need to be in a voice channel to be muted:*\n{'\n'.join(result['except'])}"
+        message += (
+            "\n\n*Users that need to be in a voice channel to be muted:*\n"
+            + "\n".join(result["except"])
+        )
 
     if result["already"]:
-        message += (
-            f"\n\n*Users that were already muted:*\n{'\n'.join(result['already'])}"
+        message += "\n\n*Users that were already muted:*\n" + "\n".join(
+            result["already"]
         )
 
     await send_view(inter, message, delete_after=15.0)
